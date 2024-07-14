@@ -1,0 +1,7 @@
+.single-card{
+    /* transition: 0.2s; */
+}
+.single-card:hover{
+    box-shadow: 0 0 3px black;
+    /* transform: scale(1.03); */
+}
