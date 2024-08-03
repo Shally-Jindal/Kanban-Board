@@ -4,10 +4,27 @@ import Lane from './lane';
 import './board.css';
 import Card from 'react-bootstrap/Card';
 import { DndContext, closestCenter } from '@dnd-kit/core';
-import { arrayMove, horizontalListSortingStrategy, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { Modal } from 'react-bootstrap';
+import ShowForm from './form';
+ 
 
 export default function Board() {
     const [tickets, setTickets] = useState([]);
+    const [show, setShow] = useState(false);
+    const [clickedTicket, setClickedTicket] = useState(null);
+    const [clickTimer, setClickTimer] = useState(null);
+    const [open, setOpen] = React.useState(false);
+ 
+    const handleClickToOpen = () => {
+        setOpen(true);
+    };
+ 
+    const handleToClose = () => {
+        setOpen(false);
+    };
+
+    const handleClose = () => setShow(false);
 
     useEffect(() => {
         setTickets([...ticketListItems]);
@@ -23,32 +40,68 @@ export default function Board() {
     const getTicketsByStatus = (status) => tickets.filter(ticket => ticket.status === status);
 
     const boardTypeObj = {
-        'TODO': { t: getTicketsByStatus('TODO'), effortCount: findEffortCount(getTicketsByStatus('TODO')) },
-        'IN_PROGRESS': { t: getTicketsByStatus('IN_PROGRESS'), effortCount: findEffortCount(getTicketsByStatus('IN_PROGRESS')) },
-        'CODE_REVIEW': { t: getTicketsByStatus('CODE_REVIEW'), effortCount: findEffortCount(getTicketsByStatus('CODE_REVIEW')) },
-        'DONE': { t: getTicketsByStatus('DONE'), effortCount: findEffortCount(getTicketsByStatus('DONE')) }
+        'TODO': { t: getTicketsByStatus('TODO'), effortCount: findEffortCount(getTicketsByStatus('TODO')), color: '#d3d3d3' },
+        'IN_PROGRESS': { t: getTicketsByStatus('IN_PROGRESS'), effortCount: findEffortCount(getTicketsByStatus('IN_PROGRESS')), color: '#add8e6' },
+        'CODE_REVIEW': { t: getTicketsByStatus('CODE_REVIEW'), effortCount: findEffortCount(getTicketsByStatus('CODE_REVIEW')), color: '#f08080' },
+        'DONE': { t: getTicketsByStatus('DONE'), effortCount: findEffortCount(getTicketsByStatus('DONE')), color: '#90ee90' }
     };
 
-    
+
     const handleDragEnd = (event) => {
         const { active, over } = event;
-    
-        // Get the ID of the lane where the ticket was dropped
-        const overLaneId = over.id;
         const draggedTicket = tickets.find(ticket => ticket.id === active.id);
 
-        if (draggedTicket) {
-            setTickets(prevTickets => {
-                const updatedTickets = prevTickets.map(ticket => {
-                    if (ticket.id === active.id) {
-                        return { ...ticket, status: overLaneId, lastUpdated: new Date(2024,6,8)};
+        // Check if it's a double click
+        if (clickTimer) {
+            clearTimeout(clickTimer);
+            setClickTimer(null);
+
+            // Double click logic
+            if (!over) {
+                setShow(true);
+                setClickedTicket(draggedTicket);
+                return;
+            }
+        } else {
+            // Set timer for single click detection
+            // setTimeout function returns a unique ID for the timer it creates
+            setClickTimer(setTimeout(() => {
+                if (over) {
+                    // Get the ID of the lane where the ticket was dropped
+                    const overLaneId = over.id;
+                    if(draggedTicket.status === 'TODO' && overLaneId === 'DONE'){
+                        console.log('not allowed');
                     }
-                    return ticket;
-                });
-                return updatedTickets;
-            });
+                    else if (draggedTicket && overLaneId !== draggedTicket.status) {
+                        setTickets(prevTickets => {
+                            const updatedTickets = prevTickets.map(ticket => {
+                                if (ticket.id === active.id) {
+                                    return { ...ticket, status: overLaneId, lastUpdated: new Date() };
+                                }
+                                return ticket;
+                            });
+                            return updatedTickets;
+                        });
+                    }
+                }
+                setClickTimer(null);
+            }, 250)); // Set delay for detecting double click
         }
     };
+
+    function handleSubmitForm(e) {
+        setTickets(prevTickets => {
+            const updatedTickets = prevTickets.map(ticket => {
+                if (ticket.id === e.id) {
+                    return { ...e, lastUpdated: new Date() };
+                }
+                return ticket;
+            });
+            return updatedTickets;
+        });
+        setShow(false);
+    }
+
 
     return (
         <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
@@ -56,7 +109,7 @@ export default function Board() {
                 {Object.keys(boardTypeObj).map((k) => (
                     <Card key={k}>
                         <Card.Header style={{ textAlign: 'left' }}>{k} - {boardTypeObj[k].effortCount}</Card.Header>
-                        <Card.Body>
+                        <Card.Body style={{ backgroundColor: boardTypeObj[k].color }}>
                             <SortableContext items={boardTypeObj[k].t.map(ticket => ticket.id)} strategy={verticalListSortingStrategy}>
                                 <Lane type={k} tickets={boardTypeObj[k].t} />
                             </SortableContext>
@@ -64,6 +117,13 @@ export default function Board() {
                     </Card>
                 ))}
             </div>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{clickedTicket?.status}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body><ShowForm ticket={clickedTicket} handleSubmitForm={(e) => handleSubmitForm(e)} /></Modal.Body>
+            </Modal>
         </DndContext>
     );
 }

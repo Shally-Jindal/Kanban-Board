@@ -5,7 +5,7 @@ export const ticketListItems = [
         effortPoint: "9",
         ticketOwner: "Shally",
         status: "TODO",
-        lastUpdated: new Date(),
+        lastUpdated: new Date(2024, 6, 8),
     },
     {
         id:2,
@@ -13,7 +13,7 @@ export const ticketListItems = [
         effortPoint: "5",
         ticketOwner: "John",
         status: "IN_PROGRESS",
-        lastUpdated: new Date(),
+        lastUpdated: new Date(2024, 6, 9),
     },
     {
         id:3,
@@ -21,7 +21,7 @@ export const ticketListItems = [
         effortPoint: "7",
         ticketOwner: "Alice",
         status: "CODE_REVIEW",
-        lastUpdated: new Date(),
+        lastUpdated: new Date(2024, 6, 7),
     },
     {
         id:4,
@@ -29,7 +29,7 @@ export const ticketListItems = [
         effortPoint: "8",
         ticketOwner: "Bob",
         status: "DONE",
-        lastUpdated: new Date(),
+        lastUpdated: new Date(2024, 6, 2),
     },
     {
         id:5,
@@ -37,7 +37,7 @@ export const ticketListItems = [
         effortPoint: "6",
         ticketOwner: "Jane",
         status: "TODO",
-        lastUpdated: new Date(),
+        lastUpdated: new Date(2024, 6, 4),
     },
     {
         id:6,
@@ -45,7 +45,7 @@ export const ticketListItems = [
         effortPoint: "4",
         ticketOwner: "Tom",
         status: "IN_PROGRESS",
-        lastUpdated: new Date(),
+        lastUpdated: new Date(2024, 6, 12),
     },
     {
         id:7,
@@ -53,7 +53,7 @@ export const ticketListItems = [
         effortPoint: "3",
         ticketOwner: "Emma",
         status: "DONE",
-        lastUpdated: new Date(),
+        lastUpdated: new Date(2024, 6, 10),
     },
     {
         id:8,
@@ -61,7 +61,7 @@ export const ticketListItems = [
         effortPoint: "5",
         ticketOwner: "Lucas",
         status: "CODE_REVIEW",
-        lastUpdated: new Date(),
+        lastUpdated: new Date(2024, 6, 4),
     },
     {
         id:9,
@@ -69,7 +69,7 @@ export const ticketListItems = [
         effortPoint: "8",
         ticketOwner: "Sophia",
         status: "TODO",
-        lastUpdated: new Date(),
+        lastUpdated: new Date(2024, 6, 2),
     },
     {
         id:10,
@@ -77,7 +77,7 @@ export const ticketListItems = [
         effortPoint: "9",
         ticketOwner: "Mike",
         status: "IN_PROGRESS",
-        lastUpdated: new Date(),
+        lastUpdated: new Date(2024, 6, 1),
     },
     {
         id:11,
@@ -85,7 +85,7 @@ export const ticketListItems = [
         effortPoint: "6",
         ticketOwner: "David",
         status: "CODE_REVIEW",
-        lastUpdated: new Date(),
+        lastUpdated: new Date(2024, 6, 5),
     },
     {
         id:12,
@@ -93,6 +93,6 @@ export const ticketListItems = [
         effortPoint: "7",
         ticketOwner: "Ella",
         status: "DONE",
-        lastUpdated: new Date(),
+        lastUpdated: new Date(2024, 6, 6),
     }
 ];
